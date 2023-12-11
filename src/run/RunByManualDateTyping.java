@@ -1,6 +1,8 @@
 package run;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,21 +15,22 @@ import models.Config;
 import models.Log;
 import models.LotteryItem;
 
-public class Main {
-
-	public void run(String type) {
-
-	}
+public class RunByManualDateTyping {
 
 //	public static void main(String[] args) throws SQLException, IOException {
+////		2. Lấy thông tin cấu hình database (Properties) 
 //		Properties prop = new Properties();
 //		prop.load(DBProperties.class.getClassLoader().getResourceAsStream("dbControl.properties"));
 //		DBProperties.setProperties(prop);
-//
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//		System.out.println("Nhap ngay xo so (FORMAT: DD-MM-YYYY): ");
+//		String date = reader.readLine();
+//		System.out.println(date);
 ////		1. Kết nối DB Control
 //		DBConnect connection = DBConnect.getInstance();
 ////		2. Lấy config(phase=source to csv, status=1) trong config table
-//		Config config = connection.getConfig("Config lấy dữ liệu tự động mỗi ngày");
+//		Config config = connection.getConfig("Config lấy dữ liệu thủ công theo ngày");
+//		config.setSource(config.getSource().replace("dd-mm-yyyy", date));;
 //		Log log = new Log();
 ////		3. Ghi log bắt đầu lấy data
 //		log.setTrackingDateTime(LocalDateTime.now());
@@ -36,7 +39,7 @@ public class Main {
 //		log.setDestination(config.getPathToSave());
 //		log.setPhase(config.getPhase());
 //		log.setResult("Thành công");
-//		log.setDetail("Bắt đầu lấy dữ liệu từ source");
+//		log.setDetail("Bắt đầu lấy dữ liệu từ " + config.getSource());
 //		log.setDelete(false);
 //		connection.insertLog(log);
 ////		4. Lấy dữ liệu
@@ -69,5 +72,5 @@ public class Main {
 //			connection.insertLog(log);
 //
 //		}
-////	}
+//	}
 }

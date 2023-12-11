@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import db.DBConnect;
 import models.Config;
 import models.Log;
 import models.LotteryItem;
@@ -74,29 +75,29 @@ public class LotteryResults {
 	}
 
 	public static List<LotteryItem> getData(Config config) throws IOException {
-//		4.1 Tạo List LotteryItem rỗng
+//		6.1 Tạo List LotteryItem rỗng
 		List<LotteryItem> lotteryItemList = new ArrayList<LotteryItem>();
 		String source = config.getSource();
 		Log logConnect = new Log();
 		try {
-//			4.2 Kết nối với source bằng JSoup
+//			6.2 Kết nối với source bằng JSoup
 			Response response = Jsoup.connect(source).execute();
-//			4.3 Kiểm tra trạng thái kết nối
+//			6.3 Kiểm tra trạng thái kết nối
 			if (response.statusCode() == 200) {
 				System.out.println("Kết nối thành công. Mã trạng thái HTTP: " + response.statusCode());
-//				4.4.1 Ghi log kết nối source thành công
+//				6.4.1 Ghi log kết nối source thành công
 				logConnect.setTrackingDateTime(LocalDateTime.now());
 				logConnect.setSource(config.getSource());
 				logConnect.setConnectStatus(1);
 				logConnect.setDestination(config.getPathToSave());
-				logConnect.setPhase("source to csv");
+				logConnect.setPhase(config.getPhase());
 				logConnect.setResult("Thành công");
 				logConnect.setDetail("Kết nối trang web thành công");
 				logConnect.setDelete(false);
-				DBConnect.getInstance().insertLog(logConnect);
-//				4.5 Lấy đoạn HTML chứa dữ liệu cần lấy từ source
+				LogController.insertLog(DBConnect.getInstance().get(), logConnect);
+//				6.5 Lấy đoạn HTML chứa dữ liệu cần lấy từ source
 				Element divCommon = response.parse().selectFirst("#load_kq_mn_0");
-//	    		4.6 Extract data từ HTML vào List
+//	    		6.6 Extract data từ HTML vào List
 				Elements provinceElements = divCommon.select("a");
 				for (Element e : provinceElements) {
 					LotteryItem lotteryItem = new LotteryItem();
@@ -118,7 +119,7 @@ public class LotteryResults {
 			}
 		} catch (HttpStatusException e) {
 			System.out.println("Lỗi kết nối. Mã trạng thái HTTP: " + e.getStatusCode());
-//			4.4.2 Ghi log lỗi kết nối source
+//			6.4.2 Ghi log lỗi kết nối source
 			logConnect.setTrackingDateTime(LocalDateTime.now());
 			logConnect.setSource(config.getSource());
 			logConnect.setConnectStatus(0);
@@ -127,7 +128,8 @@ public class LotteryResults {
 			logConnect.setResult("Thất bại");
 			logConnect.setDetail("Kết nối đến trang web thất bại. Lỗi " + e.getStatusCode());
 			logConnect.setDelete(false);
-			DBConnect.getInstance().insertLog(logConnect);
+			LogController.insertLog(DBConnect.getInstance().get(), logConnect);
+			
 		}
 
 		return lotteryItemList;

@@ -2,6 +2,7 @@ package models;
 
 
 public class LotteryItem {
+	public static final String AREA = "xsmn";
 	private String province;
 	private String prize_eight;
 	private String prize_seven;
